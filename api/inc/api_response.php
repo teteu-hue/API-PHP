@@ -40,12 +40,21 @@ class api_response
         $this->data['endpoint'] = $endpoint;
     }
 
+    // GET ENDPOINT
+    public function get_endpoint(){
+        return $this->data['endpoint'];
+    }
+
     // SEND A MESSAGE ERROR
     public function api_request_error($message = '', $status = 404)
     {
+        $data = [
+            "status" => 'ERROR',
+            "error_message" => $message
+        ];
+
         // output if generate some error
-        $this->data['status'] = 404;
-        $this->data['error_message'] = $message;
+        $this->data['data'] = $data;
         $this->send_response();
     }
 
@@ -53,16 +62,22 @@ class api_response
     public function send_api_status()
     {
         // SEND API status
-        $this->data['status'] = 'SUCCESS!';
+        $this->data['data'] = ['status' => 'SUCCESS!'];
         $this->data['message'] = 'API IS RUNNING';
         $this->send_response();
     }
 
     // SEND RESPONSE
-    private function send_response()
+    public function send_response()
     {
         header('Content-Type:application/json');
         echo json_encode($this->data);
         die(1);
+    }
+
+    public function add_to_data($key, $value)
+    {
+        // add new key to data
+        $this->data[$key] = $value;
     }
 }
