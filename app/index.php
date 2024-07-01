@@ -11,6 +11,11 @@ $variables = [
 ];
 
 $response = api_request('status', 'GET', $variables);
+$db = new Dao();
+
+$result = $db->runSelectQuery('SELECT * from Users')->fetchAll();
 
 echo '<pre>';
 print_r($response);
+
+print_r($result);
