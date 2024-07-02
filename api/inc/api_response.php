@@ -25,7 +25,7 @@ class api_response
     // SET METHOD TO USE IN A REQUEST
     public function set_method($method)
     {
-        $this->data['method'] = $method;
+        $this->add_to_data('method', $method);
     }
 
     // GET METHOD USE IN A REQUEST
@@ -37,11 +37,12 @@ class api_response
     // SET ENDPOINT IN DATA
     public function set_endpoint($endpoint)
     {
-        $this->data['endpoint'] = $endpoint;
+        $this->add_to_data('endpoint', $endpoint);
     }
 
     // GET ENDPOINT
-    public function get_endpoint(){
+    public function get_endpoint()
+    {
         return $this->data['endpoint'];
     }
 
@@ -53,8 +54,7 @@ class api_response
             "error_message" => $message
         ];
 
-        // output if generate some error
-        $this->data['data'] = $data;
+        $this->add_to_data('data', $data);
         $this->send_response();
     }
 
@@ -62,9 +62,23 @@ class api_response
     public function send_api_status()
     {
         // SEND API status
-        $this->data['data'] = ['status' => 'SUCCESS!'];
-        $this->data['message'] = 'API IS RUNNING';
+        $data = [
+            'status' => 'SUCCESS!'
+        ];
+        $message = [
+            'message' => 'API IS RUNNING!'
+        ];
+
+        $this->add_to_data('data', $data);
+        $this->add_to_data('message', $message);
         $this->send_response();
+    }
+
+    // function to add a key in data
+    public function add_to_data($key, $value)
+    {
+        // add new key to data
+        $this->data[$key] = $value;
     }
 
     // SEND RESPONSE
@@ -75,9 +89,4 @@ class api_response
         die(1);
     }
 
-    public function add_to_data($key, $value)
-    {
-        // add new key to data
-        $this->data[$key] = $value;
-    }
 }
