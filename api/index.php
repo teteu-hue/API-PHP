@@ -1,6 +1,6 @@
 <?php
 // dependencies
-require_once(dirname(__FILE__) . '/inc/database.php');
+require_once(dirname(__FILE__) . '/inc/api_database.php');
 require_once(dirname(__FILE__) . '/inc/api_response.php');
 require_once(dirname(__FILE__) . '/inc/api_logic.php');
 
@@ -39,5 +39,3 @@ $result = $api_logic->{$api_response->get_endpoint()}();
 $api_response->add_to_data('data', $result);
 
 $api_response->send_response();
-
-//$api_response->send_api_status();
