@@ -28,7 +28,7 @@ if($api_response->get_method() == 'GET'){
 }
 
 // prepare the logic of api
-$api_logic = new api_logic($api_response->get_endpoint());
+$api_logic = new api_logic($api_response->get_endpoint(), $params);
 
 if(!$api_logic->endpoint_exists()){
     $api_response->api_request_error('Inexist endpoint: '. $api_response->get_endpoint());
