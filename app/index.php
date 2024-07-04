@@ -12,4 +12,3 @@ $variables = [
 $response = api_request('status', 'GET', $variables);
 
 echo "<pre>";
-print_r($response);

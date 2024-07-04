@@ -33,8 +33,25 @@ class api_logic
     {
     }
 
+    public function params_exists(){
+        if(key_exists('active', $this->params) || key_exists('email', $this->params)){
+            return true;
+        } 
+        return false;
+    }
+
     public function get_all_users()
     {
+        // check param 'active'
+        if ($this->params_exists()) {
+
+            if (!$result = $this->api_database->get_all_users($this->params)) {
+                return $this->send_data(415, "param 'active' accepts only 'true' or 'false' values");
+            }
+            return $this->send_data(200, '', $result);
+
+        }
+
         $result = $this->api_database->get_all_users();
         return $this->send_data(200, '', $result);
     }
@@ -55,5 +72,4 @@ class api_logic
         ];
         return $data;
     }
-
 }

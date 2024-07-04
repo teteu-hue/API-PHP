@@ -21,9 +21,11 @@ $params = null;
 
 if($api_response->get_method() == 'GET'){
     $api_response->set_endpoint($_GET['endpoint']);
+    // set the params in a GET 'method'
     $params = $_GET;
 } else if ($api_response->get_method() == 'POST'){
     $api_response->set_endpoint($_POST['endpoint']);
+    // set the params in a POST 'method'
     $params = $_POST;
 }
 
