@@ -57,7 +57,18 @@ class api_database extends Dao
                     $this->sql .= 'WHERE email IS NULL ';
                 }
             }
+        } else if((isset($params[$param[0]])) && $param[0] == 'min'){
+            
+            if(!isset($params[$param[1]])){   
+
+                $clean_min = filter_var($params[$param[0]], FILTER_SANITIZE_NUMBER_INT);
+                var_dump($clean_min);
+                $min = filter_var($clean_min, FILTER_VALIDATE_INT);
+                var_dump($min);
+
+            }
         }
+
         return $this->sql;
     }
 
@@ -86,6 +97,10 @@ class api_database extends Dao
         if($this->check_active_param($params, 'status') == 'status'){
             $result = 'status';
             return $result;
+        }
+
+        if($this->check_array_param($params, ['min', 'max', 'status'])){
+            
         }
 
         $result = $this->runQuery($this->sql);
