@@ -70,12 +70,21 @@ class api_logic
     {
         if($this->params_exists()){
             $result = $this->api_database->get_all_products($this->params);
+
+            switch($result){
+                case 'status':
+                    return $this->send_data(404, "param 'status' only accepts true or false");
+                    break;
+
+                default:
+                    return $this->send_data(200, '', $result);
+                    break; 
+            }
         }
 
         $result = $this->api_database->get_all_products();
         return $this->send_data(200, '', $result);
     }
-
     // standard response 
     private function send_data($status = '', $message = '', $body = null)
     {

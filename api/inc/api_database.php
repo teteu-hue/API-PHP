@@ -29,12 +29,15 @@ class api_database extends Dao
     private function check_array_param($params, $param)
     {
 
-        if (isset($params[$param[0]])) {
-            if (($params[$param[0]] != 'true' && $params[$param[0]] != 'false')) {
+        if (isset($params[$param[0]]) && $param[0] == 'email') {
+
+            $email = $params[$param[0]];
+
+            if (($email != 'true' && $email != 'false')) {
                 return 'email';
             }
 
-            $email = ($params[$param[0]] == 'true' ? true : false);
+            $email = ($email == 'true' ? true : false);
 
             if (isset($params[$param[1]])) {
 
@@ -78,9 +81,8 @@ class api_database extends Dao
 
     public function get_all_products($params = null)
     {
+        $this->sql = 'SELECT name, description, price, stock_quantity, id_categorie, status FROM Products ';
         
-        $this->sql = 'SELECT * FROM Products ';
-
         if($this->check_active_param($params, 'status') == 'status'){
             $result = 'status';
             return $result;
