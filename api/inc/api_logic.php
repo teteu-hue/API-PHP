@@ -45,11 +45,19 @@ class api_logic
         // check param 'active'
         if ($this->params_exists()) {
 
-            if (!$result = $this->api_database->get_all_users($this->params)) {
-                return $this->send_data(415, "param 'active' accepts only 'true' or 'false' values");
-            }
-            return $this->send_data(200, '', $result);
+            $result = $this->api_database->get_all_users($this->params);
 
+            switch($result){
+                case 'active':
+                    return $this->send_data(404, "param 'active' only accepts true or false");
+                    break;
+                case 'email':
+                    return $this->send_data(404, "param 'email' only accepts true or false");
+                    break;
+                default:
+                    return $this->send_data(200, '', $result);
+                    break;
+            }
         }
 
         $result = $this->api_database->get_all_users();
