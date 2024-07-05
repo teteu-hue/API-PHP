@@ -6,58 +6,52 @@ class api_database extends Dao
 {
     private $sql;
 
-    public function check_active_param($params){
-        if(isset($params['active']))
-        {
-            if ($params['active'] != 'true' && $params['active'] != 'false') {
-                return 'active';
-            }
-            
-            $active = ($params['active'] == 'true' ? true : false);
-            
-            if ($active == true) 
-            {
-                $this->sql .= ' WHERE status IS NOT FALSE';
+    private function check_active_param($params, $param)
+    {
+        if (isset($params[$param])) {
+            if (($params[$param] != 'true' && $params[$param] != 'false')) {
+                return $param;
             }
 
-            if ($active == false) 
-            {
-                $this->sql .= ' WHERE status IS FALSE';
-            }   
+            $active = ($params[$param] == 'true' ? true : false);
+
+            if ($active == true) {
+                $this->sql .= 'WHERE status IS NOT FALSE ';
+            }
+
+            if ($active == false) {
+                $this->sql .= 'WHERE status IS FALSE ';
+            }
         }
         return $this->sql;
     }
 
-    public function check_email_param($params)
+    private function check_array_param($params, $param)
     {
-        
-        if(isset($params['email']))
-        {
-            if(isset($params['active'])){
-                
-                $email = ($params['email'] == 'true' ? true : false);
 
-                if($email == true)
-                {
-                    $this->sql .= ' AND email IS NOT NULL';
+        if (isset($params[$param[0]])) {
+            if (($params[$param[0]] != 'true' && $params[$param[0]] != 'false')) {
+                return 'email';
+            }
+
+            $email = ($params[$param[0]] == 'true' ? true : false);
+
+            if (isset($params[$param[1]])) {
+
+                if ($email == true) {
+                    $this->sql .= 'AND email IS NOT NULL';
                 }
 
-                if($email == false)
-                {
-                    $this->sql .= ' AND email IS NULL';
+                if ($email == false) {
+                    $this->sql .= 'AND email IS NULL';
                 }
-
             } else {
-                $email = ($params['email'] == 'true' ? true : false);
-
-                if($email == true)
-                {
-                    $this->sql .= ' WHERE email IS NOT NULL';
+                if ($email == true) {
+                    $this->sql .= 'WHERE email IS NOT NULL ';
                 }
 
-                if($email == false)
-                {
-                    $this->sql .= ' WHERE email IS NULL';
+                if ($email == false) {
+                    $this->sql .= 'WHERE email IS NULL ';
                 }
             }
         }
@@ -66,19 +60,33 @@ class api_database extends Dao
 
     public function get_all_users($params = null)
     {
-        $this->sql = 'SELECT username AS user, email, role FROM Users';
+        $this->sql = 'SELECT username AS user, email, role FROM Users ';
 
-        $this->check_active_param($params);
-        $this->check_email_param($params);
+        if ($this->check_active_param($params, 'active') == 'active') {
+            $result = 'active';
+            return $result;
+        }
+
+        if ($this->check_array_param($params, ['email', 'active']) == 'email') {
+            $result = 'email';
+            return $result;
+        }
 
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
-    public function get_all_products()
+    public function get_all_products($params = null)
     {
-        $sql = 'SELECT * FROM Products';
-        $result = $this->runQuery($sql);
+        
+        $this->sql = 'SELECT * FROM Products ';
+
+        if($this->check_active_param($params, 'status') == 'status'){
+            $result = 'status';
+            return $result;
+        }
+
+        $result = $this->runQuery($this->sql);
         return $result;
     }
 };

@@ -33,10 +33,12 @@ class api_logic
     {
     }
 
-    public function params_exists(){
+    private function params_exists(){
         if(key_exists('active', $this->params) || key_exists('email', $this->params)){
             return true;
-        } 
+        } else if(key_exists('status', $this->params)){
+            return true;
+        }
         return false;
     }
 
@@ -66,11 +68,15 @@ class api_logic
 
     public function get_all_products()
     {
+        if($this->params_exists()){
+            $result = $this->api_database->get_all_products($this->params);
+        }
+
         $result = $this->api_database->get_all_products();
         return $this->send_data(200, '', $result);
     }
 
-    // this is a standard response 
+    // standard response 
     private function send_data($status = '', $message = '', $body = null)
     {
         $data = [
