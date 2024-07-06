@@ -32,9 +32,12 @@ class api_database extends Dao
      * @param param -> array de parâmetros que precisam estar na query string para serem analisados
      * @return SQLString
      * Se o @param 1 'status' e o @param 2 'texto', você consegue analisar usando essa função
-    */
+     */
     private function check_array_param($params, $param)
-    {   
+    {
+        if (count($param) > 2) {
+            die("Many arguments in function 'check_array_param'");
+        }
         // se existir o parâmetro a ser analisado
         if (isset($params[$param[0]])) {
 
@@ -92,7 +95,9 @@ class api_database extends Dao
 
     public function get_all_products($params = null)
     {
-        $this->sql = 'SELECT name, description, price, stock_quantity, id_categorie, status FROM Products ';
+        $this->sql = "SELECT p.name, p.description, p.price, p.stock_quantity, c.name as categorie, status 
+                      FROM products p 
+                      INNER JOIN categories c ON c.id_categorie = p.id_categorie ";
 
         if($this->check_active_param($params, 'status') == 'status'){
             $result = 'status';
