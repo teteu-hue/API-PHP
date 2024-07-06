@@ -118,8 +118,9 @@ abstract class Dao
                 $result = $stmt;
                 
             }
-        } catch (PDOException $e) {
-            echo $e->getMessage();
+        } catch (PDOException $e) {     
+            $result = "SQL STATE: " . $e->getCode();
+            return $result;
         }
 
         $this->closeConnection();
