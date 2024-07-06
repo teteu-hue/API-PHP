@@ -36,7 +36,7 @@ class api_logic
     private function params_exists(){
         if(key_exists('active', $this->params) || key_exists('email', $this->params)){
             return true;
-        } else if(key_exists('status', $this->params)){
+        } else if(key_exists('status', $this->params) || key_exists('description', $this->params)){
             return true;
         }
         return false;
@@ -45,7 +45,7 @@ class api_logic
     public function get_all_users()
     {
         // check param 'active'
-        if ($this->params_exists()) {
+        if ($this->params_exists()) {     
 
             $result = $this->api_database->get_all_users($this->params);
 
@@ -68,6 +68,7 @@ class api_logic
 
     public function get_all_products()
     {
+        
         if($this->params_exists()){
             $result = $this->api_database->get_all_products($this->params);
 
@@ -75,7 +76,9 @@ class api_logic
                 case 'status':
                     return $this->send_data(404, "param 'status' only accepts true or false");
                     break;
-
+                case 'description':
+                    return $this->send_data(404, "param 'description' only accepts true or false");
+                    break;
                 default:
                     return $this->send_data(200, '', $result);
                     break; 

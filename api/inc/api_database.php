@@ -26,46 +26,46 @@ class api_database extends Dao
         return $this->sql;
     }
 
+    // analisa um array de parâmetros
+    /**
+     * @param params -> array de parâmetros vindos da query string
+     * @param param -> array de parâmetros que precisam estar na query string para serem analisados
+     * @return SQLString
+     * Se o @param 1 'status' e o @param 2 'texto', você consegue analisar usando essa função
+    */
     private function check_array_param($params, $param)
-    {
+    {   
+        // se existir o parâmetro a ser analisado
+        if (isset($params[$param[0]])) {
 
-        if (isset($params[$param[0]]) && $param[0] == 'email') {
+            $analyzed_parameter = $params[$param[0]];
 
-            $email = $params[$param[0]];
-
-            if (($email != 'true' && $email != 'false')) {
-                return 'email';
+            // verifica se os valores passados são diferentes de true ou false
+            if (($analyzed_parameter != 'true' && $analyzed_parameter != 'false')) {
+                return $param[0];
             }
 
-            $email = ($email == 'true' ? true : false);
+            // converte os valores 'true' e 'false' para boolean
+            $analyzed_parameter = ($analyzed_parameter == 'true' ? true : false);
 
+            // serve para manipular strings
             if (isset($params[$param[1]])) {
 
-                if ($email == true) {
-                    $this->sql .= 'AND email IS NOT NULL';
+                if ($analyzed_parameter == true) {
+                    $this->sql .= "AND $param[0] IS NOT NULL ";
                 }
 
-                if ($email == false) {
-                    $this->sql .= 'AND email IS NULL';
+                if ($analyzed_parameter == false) {
+                    $this->sql .= "AND $param[0] IS NULL ";
                 }
             } else {
-                if ($email == true) {
-                    $this->sql .= 'WHERE email IS NOT NULL ';
+                if ($analyzed_parameter == true) {
+                    $this->sql .= "WHERE $param[0] IS NOT NULL ";
                 }
 
-                if ($email == false) {
-                    $this->sql .= 'WHERE email IS NULL ';
+                if ($analyzed_parameter == false) {
+                    $this->sql .= "WHERE $param[0] IS NULL ";
                 }
-            }
-        } else if((isset($params[$param[0]])) && $param[0] == 'min'){
-            
-            if(!isset($params[$param[1]])){   
-
-                $clean_min = filter_var($params[$param[0]], FILTER_SANITIZE_NUMBER_INT);
-                var_dump($clean_min);
-                $min = filter_var($clean_min, FILTER_VALIDATE_INT);
-                var_dump($min);
-
             }
         }
 
@@ -93,14 +93,15 @@ class api_database extends Dao
     public function get_all_products($params = null)
     {
         $this->sql = 'SELECT name, description, price, stock_quantity, id_categorie, status FROM Products ';
-        
+
         if($this->check_active_param($params, 'status') == 'status'){
             $result = 'status';
             return $result;
         }
 
-        if($this->check_array_param($params, ['min', 'max', 'status'])){
-            
+        if($this->check_array_param($params, ['description', 'status']) == 'description'){
+            $result = 'description';
+            return $result;   
         }
 
         $result = $this->runQuery($this->sql);
