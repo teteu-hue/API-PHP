@@ -7,6 +7,7 @@ abstract class Dao
     private string $dsn;
     private $options = [];
     private $file;
+    protected string $sql;
 
     public function __construct()
     {
