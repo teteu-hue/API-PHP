@@ -35,7 +35,7 @@ ALTER TABLE Products
 ADD FOREIGN KEY (id_categorie) REFERENCES Categories(id_categorie);
 
 -- Tabela Customers para gerenciamento de clientes
-CREATE TABLE Customers (
+CREATE TABLE Client (
     id_customer SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     address TEXT,
@@ -52,13 +52,13 @@ CREATE TABLE OrderStatus(
 -- Tabela Orders para gerenciamento de pedidos
 CREATE TABLE Orders (
     id_order SERIAL PRIMARY KEY,
-    id_customer INT NOT NULL,
+    id_client INT NOT NULL,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     id_status INT NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_customer) REFERENCES Customers(id_customer),
+    FOREIGN KEY (id_client) REFERENCES Customers(id_client),
     FOREIGN KEY (id_status) REFERENCES OrderStatus(id_status)
 );
 
