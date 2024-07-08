@@ -31,12 +31,13 @@ class api_logic
 
     public function get_all_clients()
     {
+        $result = $this->api_database->get_all_clients();
+        return $this->send_data(200, '', $result);
     }
 
-    private function params_exists(){
-        if(key_exists('active', $this->params) || key_exists('email', $this->params)){
-            return true;
-        } else if(key_exists('status', $this->params) || key_exists('description', $this->params)){
+    private function params_exists()
+    {
+        if (key_exists('id', $this->params)) {
             return true;
         }
         return false;
@@ -44,51 +45,71 @@ class api_logic
 
     public function get_all_users()
     {
-        // check param 'active'
-        if ($this->params_exists()) {     
-
-            $result = $this->api_database->get_all_users($this->params);
-
-            switch($result){
-                case 'active':
-                    return $this->send_data(404, "param 'active' only accepts true or false");
-                    break;
-                case 'email':
-                    return $this->send_data(404, "param 'email' only accepts true or false");
-                    break;
-                default:
-                    return $this->send_data(200, '', $result);
-                    break;
-            }
-        }
-
         $result = $this->api_database->get_all_users();
+        return $this->send_data(200, '', $result);
+    }
+
+    public function get_user()
+    {
+        if ($this->params_exists()) {
+
+            if($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT))
+            {
+                $id = filter_var($clean_id, FILTER_VALIDATE_INT);
+                if($result = $this->api_database->get_user($id)){
+                    return $this->send_data(200, '', $result);
+                } else {
+                    return $this->send_data(200, 'not found', $result);
+                } 
+            }
+        } else {
+            return $this->send_data(415, "Please inform a 'id' to user");
+        }
+    }
+
+    public function get_all_active_users()
+    {
+        $result = $this->api_database->get_all_active_users();
+        return $this->send_data(200, '', $result);
+    }
+
+    public function get_all_inactive_users()
+    {
+        $result = $this->api_database->get_all_inactive_users();
         return $this->send_data(200, '', $result);
     }
 
     public function get_all_products()
     {
-        
-        if($this->params_exists()){
-            $result = $this->api_database->get_all_products($this->params);
-
-            switch($result){
-                case 'status':
-                    return $this->send_data(404, "param 'status' only accepts true or false");
-                    break;
-                case 'description':
-                    return $this->send_data(404, "param 'description' only accepts true or false");
-                    break;
-                default:
-                    return $this->send_data(200, '', $result);
-                    break; 
-            }
-        }
-
         $result = $this->api_database->get_all_products();
         return $this->send_data(200, '', $result);
     }
-    // standard response 
+
+    public function get_product()
+    {
+        if ($this->params_exists()) {
+            $clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT);
+            $id = filter_var($clean_id, FILTER_VALIDATE_INT);
+
+            $result = $this->api_database->get_product($id);
+            return $this->send_data(200, '', $result);
+        } else {
+            return $this->send_data(415, "Please inform a 'id'");
+        }
+    }
+
+    public function get_all_active_products()
+    {
+        $result = $this->api_database->get_all_active_products();
+        return $this->send_data(200, '', $result);
+    }
+
+    public function get_all_inactive_products()
+    {
+        $result = $this->api_database->get_all_inactive_products();
+        return $this->send_data(200, '', $result);
+    }
+    // standard response
     private function send_data($status = '', $message = '', $body = null)
     {
         $data = [
