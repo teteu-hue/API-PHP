@@ -24,23 +24,58 @@ class api_logic
         return method_exists($this, $this->endpoint);
     }
 
+    // standard response
+    private function send_data($status = '', $message = '', $body = null)
+    {
+        $data = [
+            'status' => $status,
+            'message' => $message,
+            'body' => $body
+        ];
+        return $data;
+    }
+
+    /** VERIFY IF PARAMS IN URL EXIST */
+    private function params_exists($param)
+    {
+        if (key_exists($param, $this->params)) {
+            
+            if(empty($this->params[$param]))
+            {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
     public function status()
     {
         return $this->send_data('SUCCESS', 'API IS RUNNING OK');
     }
 
+    /* GET ROUTES */
     public function get_all_clients()
     {
         $result = $this->api_database->get_all_clients();
         return $this->send_data(200, '', $result);
     }
 
-    private function params_exists()
+    public function get_client()
     {
-        if (key_exists('id', $this->params)) {
-            return true;
+        if($this->params_exists('id'))
+        {
+  
+            if($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT)){
+                $id = filter_var($clean_id, FILTER_VALIDATE_INT);
+
+                $result = $this->api_database->get_client($id);
+                return $this->send_data(200, '', $result);
+            } 
+            
+        } else {
+            return $this->send_data(415, 'To use this endpoint you need to specify a ID', []);
         }
-        return false;
     }
 
     public function get_all_users()
@@ -51,7 +86,7 @@ class api_logic
 
     public function get_user()
     {
-        if ($this->params_exists()) {
+        if ($this->params_exists('id')) {
 
             if($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT))
             {
@@ -87,7 +122,7 @@ class api_logic
 
     public function get_product()
     {
-        if ($this->params_exists()) {
+        if ($this->params_exists('id')) {
             $clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT);
             $id = filter_var($clean_id, FILTER_VALIDATE_INT);
 
@@ -109,14 +144,5 @@ class api_logic
         $result = $this->api_database->get_all_inactive_products();
         return $this->send_data(200, '', $result);
     }
-    // standard response
-    private function send_data($status = '', $message = '', $body = null)
-    {
-        $data = [
-            'status' => $status,
-            'message' => $message,
-            'body' => $body
-        ];
-        return $data;
-    }
+
 }

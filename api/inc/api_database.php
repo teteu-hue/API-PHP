@@ -77,6 +77,7 @@ class api_database extends Dao
     }
     */
 
+    /* GET FUNCTIONS */
     public function get_all_users()
     {
         $this->sql = BASE_QUERY_USERS;
@@ -138,6 +139,13 @@ class api_database extends Dao
     public function get_all_clients()
     {
         $this->sql = BASE_QUERY_CLIENTS;
+        $result = $this->runQuery($this->sql);
+        return $result;
+    }
+
+    public function get_client($id)
+    {
+        $this->sql = BASE_QUERY_CLIENTS . " WHERE id_client = $id";
         $result = $this->runQuery($this->sql);
         return $result;
     }
