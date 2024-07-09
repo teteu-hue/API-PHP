@@ -149,4 +149,18 @@ class api_database extends Dao
         $result = $this->runQuery($this->sql);
         return $result;
     }
+
+    public function get_all_active_clients()
+    {
+        $this->sql = BASE_QUERY_CLIENTS . " WHERE status is TRUE";
+        $result = $this->runQuery($this->sql);
+        return $result;
+    }
+
+    public function get_all_inactive_clients()
+    {
+        $this->sql = BASE_QUERY_CLIENTS . " WHERE status is FALSE";
+        $result = $this->runQuery($this->sql);
+        return $result;
+    }
 };

@@ -78,6 +78,18 @@ class api_logic
         }
     }
 
+    public function get_all_active_clients()
+    {
+        $result = $this->api_database->get_all_active_clients();
+        return $this->send_data(200, '', $result);
+    }
+
+    public function get_all_inactive_clients()
+    {
+        $result = $this->api_database->get_all_inactive_clients();
+        return $this->send_data(200, '', $result);
+    }
+
     public function get_all_users()
     {
         $result = $this->api_database->get_all_users();
@@ -143,6 +155,11 @@ class api_logic
     {
         $result = $this->api_database->get_all_inactive_products();
         return $this->send_data(200, '', $result);
+    }
+
+    public function get_all_orders()
+    {
+        
     }
 
 }
