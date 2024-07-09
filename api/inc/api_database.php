@@ -77,17 +77,17 @@ class api_database extends Dao
     }
     */
 
-    /* GET FUNCTIONS */
+    /** ***** G E T S ***** */
     public function get_all_users()
     {
-        $this->sql = BASE_QUERY_USERS;
+        $this->sql = BASE_SELECT_QUERY_USERS;
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_user($id)
     {
-        $this->sql = BASE_QUERY_USERS . " WHERE id_user = $id";
+        $this->sql = BASE_SELECT_QUERY_USERS . " WHERE id_user = $id";
         $result = $this->runQuery($this->sql);
         return $result;
     }
@@ -95,7 +95,7 @@ class api_database extends Dao
     public function get_all_active_users()
     {
         // return all active clients
-        $this->sql = BASE_QUERY_USERS . " WHERE status IS TRUE";
+        $this->sql = BASE_SELECT_QUERY_USERS . " WHERE status IS TRUE";
         $result = $this->runQuery($this->sql);
         return $result;
     }
@@ -103,64 +103,72 @@ class api_database extends Dao
     public function get_all_inactive_users()
     {
         // return all active clients
-        $this->sql = BASE_QUERY_USERS . " WHERE status IS FALSE";
+        $this->sql = BASE_SELECT_QUERY_USERS . " WHERE status IS FALSE";
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_all_products()
     {
-        $this->sql = BASE_QUERY_PRODUCT;
+        $this->sql = BASE_SELECT_QUERY_PRODUCT;
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_product($id)
     {
-        $this->sql = BASE_QUERY_PRODUCT . " WHERE id_product = $id";
+        $this->sql = BASE_SELECT_QUERY_PRODUCT . " WHERE id_product = $id";
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_all_active_products()
     {
-        $this->sql = BASE_QUERY_PRODUCT . " WHERE status IS TRUE";
+        $this->sql = BASE_SELECT_QUERY_PRODUCT . " WHERE status IS TRUE";
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_all_inactive_products()
     {
-        $this->sql = BASE_QUERY_PRODUCT . " WHERE status IS FALSE";
+        $this->sql = BASE_SELECT_QUERY_PRODUCT . " WHERE status IS FALSE";
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_all_clients()
     {
-        $this->sql = BASE_QUERY_CLIENTS;
+        $this->sql = BASE_SELECT_QUERY_CLIENTS;
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_client($id)
     {
-        $this->sql = BASE_QUERY_CLIENTS . " WHERE id_client = $id";
+        $this->sql = BASE_SELECT_QUERY_CLIENTS . " WHERE id_client = $id";
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_all_active_clients()
     {
-        $this->sql = BASE_QUERY_CLIENTS . " WHERE status is TRUE";
+        $this->sql = BASE_SELECT_QUERY_CLIENTS . " WHERE status is TRUE";
         $result = $this->runQuery($this->sql);
         return $result;
     }
 
     public function get_all_inactive_clients()
     {
-        $this->sql = BASE_QUERY_CLIENTS . " WHERE status is FALSE";
+        $this->sql = BASE_SELECT_QUERY_CLIENTS . " WHERE status is FALSE";
         $result = $this->runQuery($this->sql);
         return $result;
     }
+
+    /* ***** P O S T ***** */
+
+    public function create_client()
+    {
+
+    }
+
 };
