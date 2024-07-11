@@ -1,13 +1,15 @@
 <?php
 
 require_once(dirname(__FILE__) . '/api_database.php');
+require_once(dirname(__FILE__) . '/Models/Client.class.php');
+require_once(dirname(__FILE__) . '/Models/User.class.php');
+require_once(dirname(__FILE__) . '/Models/User.class.php');
 
 class api_logic
 {
 
     private $endpoint;
     private $params;
-    private api_database $api_database;
 
     // ===============================================
     public function __construct($endpoint, $params = null)
@@ -15,7 +17,6 @@ class api_logic
         // define the object/class properties
         $this->endpoint = $endpoint;
         $this->params = $params;
-        $this->api_database = new api_database();
     }
 
     // check if the endpoint is a valid class
@@ -57,7 +58,8 @@ class api_logic
     /* GET ROUTES */
     public function get_all_clients()
     {
-        $result = $this->api_database->get_all_clients();
+        $client = new Client();
+        $result = $client->get_all_clients();
         return $this->send_data(200, '', $result);
     }
 
@@ -69,7 +71,8 @@ class api_logic
             if($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT)){
                 $id = filter_var($clean_id, FILTER_VALIDATE_INT);
 
-                $result = $this->api_database->get_client($id);
+                $client = new Client();
+                $result = $client->get_client($id);
                 return $this->send_data(200, '', $result);
             } 
             
@@ -80,19 +83,22 @@ class api_logic
 
     public function get_all_active_clients()
     {
-        $result = $this->api_database->get_all_active_clients();
+        $client = new Client();
+        $result = $client->get_all_active_clients();
         return $this->send_data(200, '', $result);
     }
 
     public function get_all_inactive_clients()
     {
-        $result = $this->api_database->get_all_inactive_clients();
+        $client = new Client();
+        $result = $client->get_all_inactive_clients();
         return $this->send_data(200, '', $result);
     }
 
     public function get_all_users()
     {
-        $result = $this->api_database->get_all_users();
+        $user = new User();
+        $result = $user->get_all_users();
         return $this->send_data(200, '', $result);
     }
 
@@ -103,10 +109,12 @@ class api_logic
             if($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT))
             {
                 $id = filter_var($clean_id, FILTER_VALIDATE_INT);
-                if($result = $this->api_database->get_user($id)){
+
+                $user = new User();
+                if($result = $user->get_user($id)){
                     return $this->send_data(200, '', $result);
                 } else {
-                    return $this->send_data(200, 'not found', $result);
+                    return $this->send_data(404, 'not found', $result);
                 } 
             }
         } else {
@@ -116,19 +124,22 @@ class api_logic
 
     public function get_all_active_users()
     {
-        $result = $this->api_database->get_all_active_users();
+        $user = new User();
+        $result = $user->get_all_active_users();
         return $this->send_data(200, '', $result);
     }
 
     public function get_all_inactive_users()
     {
-        $result = $this->api_database->get_all_inactive_users();
+        $user = new User();
+        $result = $user->get_all_inactive_users();
         return $this->send_data(200, '', $result);
     }
 
     public function get_all_products()
     {
-        $result = $this->api_database->get_all_products();
+        $product = new Product();
+        $result = $product->get_all_products();
         return $this->send_data(200, '', $result);
     }
 
@@ -138,7 +149,8 @@ class api_logic
             $clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT);
             $id = filter_var($clean_id, FILTER_VALIDATE_INT);
 
-            $result = $this->api_database->get_product($id);
+            $product = new Product();
+            $result = $product->get_product($id);
             return $this->send_data(200, '', $result);
         } else {
             return $this->send_data(415, "Please inform a 'id'");
@@ -147,13 +159,15 @@ class api_logic
 
     public function get_all_active_products()
     {
-        $result = $this->api_database->get_all_active_products();
+        $product = new Product();
+        $result = $product->get_all_active_products();
         return $this->send_data(200, '', $result);
     }
 
     public function get_all_inactive_products()
     {
-        $result = $this->api_database->get_all_inactive_products();
+        $product = new Product();
+        $result = $product->get_all_inactive_products();
         return $this->send_data(200, '', $result);
     }
 
