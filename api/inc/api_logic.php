@@ -1,6 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__) . '/api_database.php');
 require_once(dirname(__FILE__) . '/Models/Client.class.php');
 require_once(dirname(__FILE__) . '/Models/User.class.php');
 require_once(dirname(__FILE__) . '/Models/User.class.php');

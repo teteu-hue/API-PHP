@@ -1,6 +1,5 @@
 <?php
 // dependencies
-require_once(dirname(__FILE__) . '/inc/api_database.php');
 require_once(dirname(__FILE__) . '/inc/api_response.php');
 require_once(dirname(__FILE__) . '/inc/api_logic.php');
 require_once("./inc/Models/Client.class.php");
