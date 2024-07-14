@@ -160,6 +160,7 @@ class api_logic
     {
         $product = new Product();
         $result = $product->get_all_active_products();
+        unset($product);
         return $this->send_data(200, '', $result);
     }
 
@@ -175,4 +176,41 @@ class api_logic
         
     }
 
+    /* INSERTS FUNCTIONS */
+    public function create_client()
+    {
+        $client = new Client();
+        if(isset($this->params))
+        {
+            if(empty($this->params['name']))
+            {
+                $name = null;
+            } else {
+                $name = $this->params['name'];
+            }
+
+            if(empty($this->params['phone']))
+            {
+                $phone = null;
+            } else {
+                $name = $this->params['phone'];
+            }
+
+            if(empty($this->params['address']))
+            {
+                $address = null;
+            } else {
+                $address = $this->params['address'];
+            }
+
+        $result = $client->create_client($name, $phone, $address);
+
+        if($result == false)
+        {
+            return $this->send_data(415, 'Somenthing failed!');
+        }
+
+        return $this->send_data(201, 'SUCCESS!', $result);
+        }
+    }
 }
