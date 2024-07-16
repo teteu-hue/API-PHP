@@ -72,8 +72,9 @@ class api_logic
                 $result = $client->get_client($id);
                 if (count($result) <= 0) {
                     return $this->send_data(404);
+                } else {
+                    return $this->send_data(200, '', $result);
                 }
-                return $this->send_data(200, '', $result);
             }
         } else {
             return $this->send_data(415, 'To use this endpoint you need to specify a ID', []);
@@ -112,8 +113,9 @@ class api_logic
                 $result = $user->get_user($id);
                 if (count($result) <= 0) {
                     return $this->send_data(404);
+                } else {
+                    return $this->send_data(200, '', $result);
                 }
-                return $this->send_data(200, '', $result);
             }
         } else {
             return $this->send_data(415, "Please inform a 'id' to user");
@@ -151,8 +153,9 @@ class api_logic
             $result = $product->get_product($id);
             if (count($result) <= 0) {
                 return $this->send_data(404);
+            } else {
+                return $this->send_data(200, '', $result);
             }
-            return $this->send_data(200, '', $result);
         } else {
             return $this->send_data(415, "Please inform a 'id'");
         }
