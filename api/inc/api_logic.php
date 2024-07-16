@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/Models/Client.class.php');
 require_once(dirname(__FILE__) . '/Models/User.class.php');
-require_once(dirname(__FILE__) . '/Models/User.class.php');
+require_once(dirname(__FILE__) . '/Models/Product.class.php');
 
 class api_logic
 {
@@ -39,9 +39,8 @@ class api_logic
     private function params_exists($param)
     {
         if (key_exists($param, $this->params)) {
-            
-            if(empty($this->params[$param]))
-            {
+
+            if (empty($this->params[$param])) {
                 return false;
             }
             return true;
@@ -64,17 +63,18 @@ class api_logic
 
     public function get_client()
     {
-        if($this->params_exists('id'))
-        {
-  
-            if($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT)){
+        if ($this->params_exists('id')) {
+
+            if ($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT)) {
                 $id = filter_var($clean_id, FILTER_VALIDATE_INT);
 
                 $client = new Client();
                 $result = $client->get_client($id);
+                if (count($result) <= 0) {
+                    return $this->send_data(404);
+                }
                 return $this->send_data(200, '', $result);
-            } 
-            
+            }
         } else {
             return $this->send_data(415, 'To use this endpoint you need to specify a ID', []);
         }
@@ -105,16 +105,15 @@ class api_logic
     {
         if ($this->params_exists('id')) {
 
-            if($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT))
-            {
+            if ($clean_id = filter_var($this->params['id'], FILTER_SANITIZE_NUMBER_INT)) {
                 $id = filter_var($clean_id, FILTER_VALIDATE_INT);
 
                 $user = new User();
-                if($result = $user->get_user($id)){
-                    return $this->send_data(200, '', $result);
-                } else {
-                    return $this->send_data(404, 'not found', $result);
-                } 
+                $result = $user->get_user($id);
+                if (count($result) <= 0) {
+                    return $this->send_data(404);
+                }
+                return $this->send_data(200, '', $result);
             }
         } else {
             return $this->send_data(415, "Please inform a 'id' to user");
@@ -150,6 +149,9 @@ class api_logic
 
             $product = new Product();
             $result = $product->get_product($id);
+            if (count($result) <= 0) {
+                return $this->send_data(404);
+            }
             return $this->send_data(200, '', $result);
         } else {
             return $this->send_data(415, "Please inform a 'id'");
@@ -173,44 +175,37 @@ class api_logic
 
     public function get_all_orders()
     {
-        
     }
 
     /* INSERTS FUNCTIONS */
     public function create_client()
     {
         $client = new Client();
-        if(isset($this->params))
-        {
-            if(empty($this->params['name']))
-            {
+
+        if (isset($this->params['name'])) {
+            if (empty($this->params['name'])) {
                 $name = null;
             } else {
                 $name = $this->params['name'];
             }
+        } else {
+            return $this->send_data(415, "You need to inform at least param 'name'");
+        }
 
-            if(empty($this->params['phone']))
-            {
-                $phone = null;
-            } else {
-                $name = $this->params['phone'];
-            }
+        if (empty($this->params['phone'])) {
+            $phone = null;
+        } else {
+            $phone = $this->params['phone'];
+        }
 
-            if(empty($this->params['address']))
-            {
-                $address = null;
-            } else {
-                $address = $this->params['address'];
-            }
+        if (empty($this->params['address'])) {
+            $address = null;
+        } else {
+            $address = $this->params['address'];
+        }
 
         $result = $client->create_client($name, $phone, $address);
 
-        if($result == false)
-        {
-            return $this->send_data(415, 'Somenthing failed!');
-        }
-
         return $this->send_data(201, 'SUCCESS!', $result);
-        }
     }
 }

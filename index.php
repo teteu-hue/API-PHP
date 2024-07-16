@@ -27,9 +27,6 @@
     </style>
 
 <body>
-    <div id="flip">Click to slide</div>
-    <div class="panel">Produtos</div>
-    <div class="panel">Cadastros</div>
-    
+
 </body>
 </html>
