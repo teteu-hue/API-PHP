@@ -105,7 +105,7 @@ BEGIN
     VALUES (p_name);
 END $$;
 
--- Customers
+-- CLIENT
 CREATE OR REPLACE PROCEDURE insert_customer(
     p_name VARCHAR(100),
     p_phone VARCHAR(20) DEFAULT NULL,
@@ -116,6 +116,25 @@ AS $$
 BEGIN
     INSERT INTO Customers(name, phone, address)
     VALUES(p_name, p_phone, p_address);
+END $$;
+
+CREATE OR REPLACE PROCEDURE delete_client(
+    p_client INT
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_client INT;
+BEGIN
+
+    v_client = (SELECT id_client FROM clients WHERE id_client = p_client);
+
+    IF v_client IS NULL THEN
+        RAISE EXCEPTION 'ID NOT FOUND!';
+    END IF;
+
+    DELETE FROM clients
+    WHERE id_client = v_client;
 END $$;
 
 -- Orders
