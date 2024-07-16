@@ -118,9 +118,10 @@ BEGIN
     VALUES(p_name, p_phone, p_address);
 END $$;
 
-CREATE OR REPLACE PROCEDURE delete_client(
+CREATE OR REPLACE FUNCTION disable_client(
     p_client INT
-)
+) 
+RETURNS BOOLEAN
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -130,11 +131,76 @@ BEGIN
     v_client = (SELECT id_client FROM clients WHERE id_client = p_client);
 
     IF v_client IS NULL THEN
-        RAISE EXCEPTION 'ID NOT FOUND!';
+        RETURN FALSE;
     END IF;
 
-    DELETE FROM clients
+    UPDATE clients
+    SET status = FALSE
     WHERE id_client = v_client;
+    RETURN TRUE;
+END $$;
+
+CREATE OR REPLACE FUNCTION enable_client(
+    p_client INT
+) 
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_client INT;
+BEGIN
+
+    v_client = (SELECT id_client FROM clients WHERE id_client = p_client);
+
+    IF v_client IS NULL THEN
+        RETURN FALSE;
+    END IF;
+
+    UPDATE clients
+    SET status = TRUE
+    WHERE id_client = v_client;
+    RETURN TRUE;
+END $$;
+
+CREATE OR REPLACE FUNCTION update_client(
+    p_id_client INT, 
+    p_column_name VARCHAR(100), 
+    p_new_value VARCHAR(100)
+) 
+RETURNS VARCHAR(100)
+LANGUAGE plpgsql 
+AS $$
+DECLARE
+    v_id_client INT;
+    v_column_name VARCHAR(100);
+    v_sql_query TEXT;
+BEGIN
+
+    v_id_client = (SELECT id_client FROM clients
+                    WHERE id_client = p_id_client);
+
+    IF v_id_client IS NULL THEN
+        RETURN 'ID CLIENT NOT EXISTS';
+    END IF;
+
+    v_column_name = EXISTS (
+                     SELECT 1
+                     FROM information_schema.columns
+                     WHERE table_schema = 'public'
+                        AND table_name = 'clients'
+                        AND column_name = p_column_name);
+
+    IF v_column_name IS NOT NULL THEN
+        v_sql_query := 'UPDATE clients SET ' || quote_ident(p_column_name) || ' = ' || quote_literal(p_new_value) || ' WHERE id_client = ' || v_id_client;
+
+        EXECUTE v_sql_query;
+        RETURN 'CAMPO ATUALIZADO COM SUCESSO!';
+    END IF;
+
+    IF v_column_name IS NULL THEN
+        RETURN 'CAMPO NÃO EXISTE NA TABELA';
+    END IF;
+
 END $$;
 
 -- Orders
