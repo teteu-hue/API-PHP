@@ -51,10 +51,6 @@ class Product extends Dao
     {
         $this->sql = BASE_SELECT_QUERY_PRODUCT;
 
-        if($min > $max){
-            return "The @param 'min' is greather than @param 'max'";
-        }
-
         if($min == null && $max == null) {
             $this->sql;
         } else if($min != null && $max != null) {
@@ -63,7 +59,7 @@ class Product extends Dao
             $this->sql .= " WHERE stock_quantity >= $min";
         } else if($min == null && $max != null){
             $this->sql .= " WHERE stock_quantity <= $max";
-        }
+        } 
         
         $result = $this->runQuery($this->sql);
         return $result;

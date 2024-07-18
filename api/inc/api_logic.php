@@ -198,6 +198,10 @@ class api_logic
         {
             $min = $this->params['min'];
             $max = $this->params['max'];
+            if($min > $max)
+            {
+                return $this->send_data(415, "The @param 'min' is greather than @param 'max'");
+            }
             $result = $product->get_all_products_with_min_and_max_stock($min, $max);
         } else if($this->params_exists('min') && !$this->params_exists('max'))
         {
