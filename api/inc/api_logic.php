@@ -176,6 +176,46 @@ class api_logic
         return $this->send_data(200, '', $result);
     }
 
+    public function get_all_products_without_stock()
+    {
+        $product = new Product();
+        $result = $product->get_all_products_without_stock();
+        return $this->send_data(200, '', $result);
+    }
+
+    public function get_all_products_with_stock()
+    {
+        $product = new Product();
+        $result = $product->get_all_products_with_stock();
+        return $this->send_data(200, '', $result);
+    }
+
+    public function get_all_products_with_min_and_max_stock()
+    {
+        $product = new Product();
+        $status_code = 200;
+        if ($this->params_exists('min') && $this->params_exists('max'))
+        {
+            $min = $this->params['min'];
+            $max = $this->params['max'];
+            $result = $product->get_all_products_with_min_and_max_stock($min, $max);
+        } else if($this->params_exists('min') && !$this->params_exists('max'))
+        {
+            $min = $this->params['min'];
+            $max = null;
+            $result = $product->get_all_products_with_min_and_max_stock($min, $max);
+        } else if(!$this->params_exists('min') && $this->params_exists('max'))
+        {
+            $min = null;
+            $max = $this->params['max'];
+            $result = $product->get_all_products_with_min_and_max_stock($min, $max);
+        } else {
+            $result = "@param 'min' and @param 'max' not exist's";
+            $status_code = 415;
+        }
+        return $this->send_data($status_code, '', $result);
+    }
+
     public function get_all_orders()
     {
     }

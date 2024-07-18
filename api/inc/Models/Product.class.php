@@ -33,4 +33,40 @@ class Product extends Dao
         return $result;
     }
 
+    public function get_all_products_without_stock()
+    {
+        $this->sql = BASE_SELECT_QUERY_PRODUCT . " WHERE stock_quantity <= 0";
+        $result = $this->runQuery($this->sql);
+        return $result;
+    }
+
+    public function get_all_products_with_stock()
+    {
+        $this->sql = BASE_SELECT_QUERY_PRODUCT . " WHERE stock_quantity > 0";
+        $result = $this->runQuery($this->sql);
+        return $result;
+    }
+
+    public function get_all_products_with_min_and_max_stock($min = null, $max = null)
+    {
+        $this->sql = BASE_SELECT_QUERY_PRODUCT;
+
+        if($min > $max){
+            return "The @param 'min' is greather than @param 'max'";
+        }
+
+        if($min == null && $max == null) {
+            $this->sql;
+        } else if($min != null && $max != null) {
+            $this->sql .= " WHERE stock_quantity BETWEEN $min AND $max";
+        } else if($min != null && $max == null){
+            $this->sql .= " WHERE stock_quantity >= $min";
+        } else if($min == null && $max != null){
+            $this->sql .= " WHERE stock_quantity <= $max";
+        }
+        
+        $result = $this->runQuery($this->sql);
+        return $result;
+    }
+
 }
